@@ -206,7 +206,7 @@ RUN python data/convert_nndc71.py --cleanup && \
 
 
 
-# Copy over the local repository files
+# Copy over the local repository files to the docker image
 COPY tests tests/
 COPY tasks tasks/
 
