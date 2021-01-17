@@ -211,3 +211,9 @@ COPY tests tests/
 COPY tasks tasks/
 
 WORKDIR tasks
+
+
+#this sets the port, gcr is looking for this varible
+ENV PORT 8888
+
+CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token='paramak'", "--NotebookApp.password='paramak'"]
