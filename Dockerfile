@@ -45,24 +45,8 @@ RUN pip install plotly tqdm ghalton==0.6.1 noisyopt scikit-optimize \
                 neutronics_material_maker parametric-plasma-source pytest \
                 pytest-cov holoviews ipywidgets
 
-# RUN git clone --single-branch --branch develop https://github.com/openmc-dev/openmc.git
-RUN git clone --single-branch --branch dagmc-3.2.0 https://github.com/pshriwise/openmc.git
-RUN git clone https://github.com/njoy/NJOY2016
-
-RUN mkdir DAGMC && \
-    cd DAGMC && \
-    git clone --single-branch --branch develop https://github.com/svalinn/dagmc
-
-RUN mkdir MOAB && \
-    cd MOAB && \
-    git clone  --single-branch --branch develop https://bitbucket.org/fathomteam/moab/
-
-
 # needed for openmc
 RUN pip install --upgrade numpy
-
-RUN git clone --single-branch --branch master https://github.com/embree/embree
-RUN git clone https://github.com/pshriwise/double-down
 
 # needed for moab
 RUN pip install cython
@@ -97,7 +81,8 @@ RUN git clone  --single-branch --branch develop https://github.com/ukaea/paramak
 ARG compile_cores=2
 
 # Clone and install Embree
-RUN echo git clone --single-branch --branch master https://github.com/embree/embree  && \
+RUN echo installing embree && \
+    git clone --single-branch --branch master https://github.com/embree/embree && \
     cd embree && \
     mkdir build && \
     cd build && \
@@ -106,9 +91,12 @@ RUN echo git clone --single-branch --branch master https://github.com/embree/emb
     make -j"$compile_cores" && \
     make -j"$compile_cores" install
 
+
 # Clone and install MOAB
-RUN echo git clone  --single-branch --branch develop https://bitbucket.org/fathomteam/moab/ && \
+RUN echo installing moab && \
+    mkdir MOAB && \
     cd MOAB && \
+    git clone  --single-branch --branch develop https://bitbucket.org/fathomteam/moab/ && \
     mkdir build && \
     cd build && \
     cmake ../moab -DENABLE_HDF5=ON \
@@ -132,7 +120,8 @@ RUN echo git clone  --single-branch --branch develop https://bitbucket.org/fatho
 
 
 # Clone and install Double-Down
-RUN echo git clone https://github.com/pshriwise/double-down && \
+RUN echo installing double-down && \
+    git clone https://github.com/pshriwise/double-down && \
     cd double-down && \
     mkdir build && \
     cd build && \
@@ -146,9 +135,9 @@ RUN echo git clone https://github.com/pshriwise/double-down && \
 # DAGMC install
 # ENV DAGMC_INSTALL_DIR=$HOME/DAGMC/
 RUN echo installing dagmc && \
+    mkdir DAGMC && \
     cd DAGMC && \
-    # mkdir DAGMC && cd DAGMC && \
-    # git clone --single-branch --branch develop https://github.com/svalinn/dagmc && \
+    git clone --single-branch --branch develop https://github.com/svalinn/dagmc && \
     mkdir build && \
     cd build && \
     cmake ../dagmc -DBUILD_TALLY=ON \
@@ -160,7 +149,8 @@ RUN echo installing dagmc && \
 
 # installs OpenMc from source
 RUN cd /opt && \
-    git clone --single-branch --branch develop https://github.com/openmc-dev/openmc.git && \
+#   git clone --single-branch --branch develop https://github.com/openmc-dev/openmc.git && \
+    git clone --single-branch --branch dagmc-3.2.0 https://github.com/pshriwise/openmc.git && \
     cd openmc && \
     mkdir build && \
     cd build && \
@@ -172,7 +162,7 @@ RUN cd /opt && \
 
 # Clone and install NJOY2016
 RUN echo installing NJOY2016 && \
-    # git clone https://github.com/njoy/NJOY2016 && \
+    git clone https://github.com/njoy/NJOY2016 && \
     cd NJOY2016 && \
     mkdir build && \
     cd build && \
@@ -185,7 +175,6 @@ ENV PATH=$PATH:$HOME/NJOY2016/build
 
 
 # install nuclear data
-
 RUN wget https://github.com/mit-crpg/WMP_Library/releases/download/v1.1/WMP_Library_v1.1.tar.gz
 RUN tar -xf WMP_Library_v1.1.tar.gz -C /
 
@@ -205,16 +194,13 @@ RUN python data/convert_nndc71.py --cleanup && \
     python delete_nuclear_data_not_used_in_cross_section_xml.py
 
 
-
-
 # Copy over the local repository files to the docker image
 COPY tests tests/
 COPY tasks tasks/
 
 WORKDIR tasks
 
-
-#this sets the port, gcr is looking for this varible
+#this sets the port, gcr looks for this varible
 ENV PORT 8888
 
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token='paramak'", "--NotebookApp.password='paramak'"]
