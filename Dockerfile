@@ -45,7 +45,8 @@ RUN pip install plotly tqdm ghalton==0.6.1 noisyopt scikit-optimize \
                 neutronics_material_maker parametric-plasma-source pytest \
                 pytest-cov holoviews ipywidgets
 
-RUN git clone --single-branch --branch develop https://github.com/openmc-dev/openmc.git
+# RUN git clone --single-branch --branch develop https://github.com/openmc-dev/openmc.git
+RUN git clone --single-branch --branch dagmc-3.2.0 https://github.com/pshriwise/openmc.git
 RUN git clone https://github.com/njoy/NJOY2016
 
 RUN mkdir DAGMC && \
