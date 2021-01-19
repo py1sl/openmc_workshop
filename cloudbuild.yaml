@@ -1,4 +1,5 @@
 steps:
+  timeout: 10800s
   - name: gcr.io/cloud-builders/docker
     args:
       - build
@@ -8,8 +9,8 @@ steps:
       - .
       - '-f'
       - Dockerfile
-    id: Build
     timeout: 10800s
+    id: Build
   - name: gcr.io/cloud-builders/docker
     args:
       - push
