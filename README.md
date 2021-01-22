@@ -57,7 +57,7 @@ internet browser of your choice. Select and open the URL at the end of the termi
 ![url_to_select](https://user-images.githubusercontent.com/8583900/103912503-4a65cc00-50ff-11eb-87db-ebe26a313fd6.png)
 
 5. Some tasks require the use of Paraview to view the 3D meshes produced.
-Parview can be download from [here](https://www.paraview.org/download/)
+Paraview can be downloaded from [here](https://www.paraview.org/download/)
     <details>
       <summary>Ubuntu terminal commands for Paraview install</summary>
         <pre><code class="language-html">
